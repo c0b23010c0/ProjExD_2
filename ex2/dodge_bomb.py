@@ -40,7 +40,7 @@ def kk_angle(sum_mv):
             (+5, -5) : pg.transform.rotozoom(img, 315, 2.0), #右上
             (0, -5) : pg.transform.rotozoom(img, 270, 2.0),   #上
             }
-    if sum_mv == [0, 0]:
+    if sum_mv == [0, 0]: #初期値のままの場合
         return pg.transform.rotozoom(pg.image.load("fig/3.png"), 0, 2.0)
         
     for n, im in angle.items():
