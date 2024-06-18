@@ -10,6 +10,8 @@ way = {pg.K_UP:(0, -5),
        pg.K_LEFT:(-5, 0), 
        pg.K_RIGHT:(+5, 0),
        } #移動時の方向記憶辞書
+
+
 os.chdir(os.path.dirname(os.path.abspath(__file__)))
 
 
@@ -25,6 +27,27 @@ def check_bomn(rct: pg.Rect) -> tuple[bool, bool]:
     if rct.top < 0 or HEIGHT < rct.bottom:
         tate = False
     return yoko, tate
+
+
+def kk_angle(sum_mv):
+    img = pg.image.load("fig/3.png")
+    angle = {(-5, 0) : pg.transform.rotozoom(img, 0, 2.0),   #左
+            (-5, -5) : pg.transform.rotozoom(img, 315, 2.0), #左上
+            (-5, +5) : pg.transform.rotozoom(img, 45, 2.0),  #左下
+            (0, +5) : pg.transform.rotozoom(img, 90, 2.0),  #下
+            (+5, 0) : pg.transform.rotozoom(img, 0, 2.0),    #右
+            (+5, +5) : pg.transform.rotozoom(img, 45, 2.0),  #右下
+            (+5, -5) : pg.transform.rotozoom(img, 315, 2.0), #右上
+            (0, -5) : pg.transform.rotozoom(img, 270, 2.0),   #上
+            }
+    if sum_mv == [0, 0]:
+        return pg.transform.rotozoom(pg.image.load("fig/3.png"), 0, 2.0)
+        
+    for n, im in angle.items():
+        if sum_mv[0] == n[0] and sum_mv[1] == n[1]:
+            if n[0] >= 0:
+                im = pg.transform.flip(im, True, False)
+            return im
 
 
 def main():
@@ -57,11 +80,15 @@ def main():
             if key_lst[k]:
                 sum_mv[0] += v[0]
                 sum_mv[1] += v[1] #way回転
-
+        
+        
+    
         kk_rct.move_ip(sum_mv)
         if check_bomn(kk_rct) != (True, True):
             kk_rct.move_ip(-sum_mv[0], -sum_mv[1])
+        
         screen.blit(kk_img, kk_rct)
+        kk_img = kk_angle(sum_mv)
 
         bb_rct.move_ip(vx, vy)
         yoko, tate = check_bomn(bb_rct)
